@@ -75,12 +75,44 @@ function handleAddTask(event) {
             completed: false,
             createdAt: new Date.toISOString()
         };
-        
+
         state.tasks.push(task);
         state.taskInput.value = '';
-        renderTasks();
+        
+        const taskElement = createTaskElement(task);
+        state.tasksList.appendChild(taskElement);
     }
 }
 
+function createTaskElement(task) {
+    const taskItem = document.createElement('li');
+    taskItem.className = 'task-item';
+    taskItem.dataset.id = task.id;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+    checkbox.addEventListener('change', () => toggleTask(task.id));
+
+    const taskText = document.createElement('p');
+    taskText.className = 'task-text';
+    taskText.textContent = task.text;
+
+    if (task.completed) {
+        taskText.style.textDecoration = 'line-through';
+        taskText.style.color = '#888';
+    }
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = 'Удалить';
+    deleteBtn.addEventListener('click', () => deleteTask(task.id));
+
+    taskItem.appendChild(checkbox);
+    taskItem.appendChild(taskText);
+    taskItem.appendChild(deleteBtn);
+
+    return taskItem;
+}
 
 document.addEventListener('DOMContentLoaded', init);
