@@ -5,7 +5,24 @@ const state = {
 
 function init() {
     createAppStructure();
+    loadTasks();
     attachEventListeners();
+}
+
+function loadTasks() {
+    const saved = localStorage.getItem('todoTasks');
+    if (saved) {
+        state.tasks = JSON.parse(saved);
+
+        state.tasks.forEach(task => {
+            const taskElement = createTaskElement(task);
+            state.tasksList.appendChild(taskElement);
+        });
+    }
+}
+
+function saveTasks() {
+    localStorage.setItem('todoTasks', JSON.stringify(state.tasks));
 }
 
 function createAppStructure() {
@@ -73,10 +90,11 @@ function handleAddTask(event) {
             id: Date.now(),
             text: text,
             completed: false,
-            createdAt: new Date.toISOString()
+            createdAt: new Date().toISOString()
         };
 
         state.tasks.push(task);
+        saveTasks();
         state.taskInput.value = '';
         
         const taskElement = createTaskElement(task);
