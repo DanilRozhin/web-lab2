@@ -4,6 +4,7 @@ const state = {
 }
 
 function init() {
+    localStorage.removeItem('todoTasks')
     createAppStructure();
     loadTasks();
     attachEventListeners();
