@@ -4,7 +4,7 @@ const state = {
 }
 
 function init() {
-    localStorage.removeItem('todoTasks')
+    // localStorage.removeItem('todoTasks');
     createAppStructure();
     loadTasks();
     attachEventListeners();
@@ -125,6 +125,7 @@ function createTaskElement(task) {
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = 'Удалить';
+    deleteBtn.textContent = 'x';
     deleteBtn.addEventListener('click', () => deleteTask(task.id));
 
     taskItem.appendChild(checkbox);
@@ -132,6 +133,33 @@ function createTaskElement(task) {
     taskItem.appendChild(deleteBtn);
 
     return taskItem;
+}
+
+function toggleTask(taskId) {
+    const task = state.tasks.find(t => t.id === taskId);
+
+    if (task) {
+        task.completed = !task.completed;
+        saveTasks();
+    
+        const taskElement = document.querySelector(`[data-id="${taskId}"]`);
+        
+        if (taskElement) {
+            const taskText = taskElement.querySelector('.task-text');
+            taskText.style.textDecoration = task.completed ? 'line-through' : 'none';
+            taskText.style.color = task.completed ? '#888' : 'inherit';
+        }
+    }
+}
+
+function deleteTask(taskId) {
+    state.tasks = state.tasks.filter(t => t.id !== taskId);
+    saveTasks();
+
+    const taskElement = document.querySelector(`[data-id="${taskId}"]`);
+    if (taskElement) {
+        taskElement.remove();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);

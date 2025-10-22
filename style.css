@@ -30,3 +30,45 @@
 .add-btn:hover {
     background: #333;
 }
+
+.tasks-section {
+    margin-top: 30px;
+}
+
+.tasks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: none;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+}
+
+.task-text {
+    flex: 1;
+    margin: 0 15px;
+    padding: 0;
+}
+
+.delete-btn {
+    background: black;
+    color: white;
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: block;
+}
