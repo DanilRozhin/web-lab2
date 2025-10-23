@@ -143,10 +143,10 @@ function createTaskElement(task) {
     const editBtn = document.createElement('button');
     editBtn.className = 'edit-btn';
     editBtn.textContent = 'Изменить';
+    editBtn.addEventListener('click', () => editTask(task.id));
 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = 'Удалить';
     deleteBtn.textContent = 'x';
     deleteBtn.addEventListener('click', () => deleteTask(task.id));
 
@@ -173,6 +173,38 @@ function toggleTask(taskId) {
             taskText.style.textDecoration = task.completed ? 'line-through' : 'none';
             taskText.style.color = task.completed ? '#888' : 'inherit';
         }
+    }
+}
+
+function editTask(taskId) {
+    const task = state.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    const newText = prompt('Редактировать задачу:', task.text);
+    if (newText === null) return;
+    
+    const newDate = prompt('Новая дата (ГГГГ-ММ-ДД):', task.taskDate || '');
+    if (newDate === null) return;
+
+    if (newDate && !/^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+        alert('Необходимый формат даты: ГГГГ-ММ-ДД');
+        return;
+    }
+
+    if (newText.trim() !== '') {
+        task.text = newText.trim();
+    }
+    task.taskDate = newDate;
+    saveTasks();
+    
+    const taskElement = document.querySelector(`[data-id="${taskId}"]`);
+    if (taskElement) {
+        const taskText = taskElement.querySelector('.task-text');
+        const taskDate = taskElement.querySelector('.task-date');
+        
+        taskText.textContent = task.text;
+        taskDate.textContent = task.taskDate || '';
+        taskDate.dateTime = task.taskDate;
     }
 }
 
