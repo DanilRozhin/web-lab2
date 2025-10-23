@@ -50,14 +50,19 @@ function createAppStructure() {
     input.placeholder = 'Новая задача';
     input.className = 'task-input';
 
+    const dateInput = document.createElement('input');
+    dateInput.type = 'date';
+    dateInput.className = 'date-input';
+    dateInput.valueAsDate = new Date();
+
     const addButton = document.createElement('button');
     addButton.type = 'submit';
     addButton.className = 'add-btn';
     addButton.textContent = 'Добавить';
 
     form.appendChild(input);
+    form.appendChild(dateInput);
     form.appendChild(addButton);
-
 
 
     const tasksSection = document.createElement('section');
@@ -75,6 +80,7 @@ function createAppStructure() {
 
     state.tasksList = tasksList;
     state.taskInput = input;
+    state.dateInput = dateInput;
 }
 
 function attachEventListeners() {
@@ -86,17 +92,21 @@ function handleAddTask(event) {
     event.preventDefault();
 
     const text = state.taskInput.value.trim();
+    const taskDate = state.dateInput.value;
+
     if (text) {
         const task = {
             id: Date.now(),
             text: text,
             completed: false,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            taskDate: taskDate
         };
 
         state.tasks.push(task);
         saveTasks();
         state.taskInput.value = '';
+        state.dateInput.valueAsDate = new Date();
         
         const taskElement = createTaskElement(task);
         state.tasksList.appendChild(taskElement);
@@ -117,10 +127,22 @@ function createTaskElement(task) {
     taskText.className = 'task-text';
     taskText.textContent = task.text;
 
+    const taskDate = document.createElement('time');
+    taskDate.className = 'task-date';
+    taskDate.dateTime = task.taskDate;
+
     if (task.completed) {
         taskText.style.textDecoration = 'line-through';
         taskText.style.color = '#888';
     }
+
+    if (task.taskDate) {
+        taskDate.textContent = task.taskDate;
+    }
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit-btn';
+    editBtn.textContent = 'Изменить';
 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
@@ -130,6 +152,8 @@ function createTaskElement(task) {
 
     taskItem.appendChild(checkbox);
     taskItem.appendChild(taskText);
+    taskItem.appendChild(taskDate);
+    taskItem.appendChild(editBtn);
     taskItem.appendChild(deleteBtn);
 
     return taskItem;

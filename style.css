@@ -43,13 +43,14 @@
 
 .task-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 15px;
     border: none;
     margin-bottom: 8px;
     border-radius: 8px;
     background: white;
     transition: all 0.3s ease;
+    gap: 15px;
 }
 
 .task-item:hover {
@@ -60,6 +61,36 @@
     flex: 1;
     margin: 0 15px;
     padding: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+}
+
+.task-date {
+    font-size: 17px;
+    color: #666;
+    font-style: italic;
+    align-self: center;
+}
+
+.date-input {
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.edit-btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    align-self: center;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 .delete-btn {
@@ -71,4 +102,6 @@
     border-radius: 50%;
     font-size: 11px;
     display: block;
+    align-self: center;
+    cursor: pointer;
 }
