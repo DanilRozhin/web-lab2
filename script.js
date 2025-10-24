@@ -7,7 +7,6 @@ function init() {
     // localStorage.removeItem('todoTasks');
     createAppStructure();
     loadTasks();
-    attachEventListeners();
 }
 
 function loadTasks() {
@@ -17,7 +16,7 @@ function loadTasks() {
 
         state.tasks.forEach(task => {
             const taskElement = createTaskElement(task);
-            state.tasksList.appendChild(taskElement);
+            state.tasksDom.appendChild(taskElement);
         });
     }
 }
@@ -43,6 +42,7 @@ function createAppStructure() {
 
     const form = document.createElement('form');
     form.className = 'todo-form';
+    form.addEventListener('submit', handleAddTask);
 
     const input = document.createElement('input');
     input.type = 'text';
@@ -64,28 +64,55 @@ function createAppStructure() {
     form.appendChild(dateInput);
     form.appendChild(addButton);
 
+    const sortButton = document.createElement('button');
+    sortButton.className = 'sort-btn';
+    sortButton.type = 'button';
+    sortButton.textContent = 'Сортировать по дате';
+    sortButton.addEventListener('click', sortTasksByDate);
+
 
     const tasksSection = document.createElement('section');
     tasksSection.className = 'tasks-section';
 
-    const tasksList = document.createElement('ul');
-    tasksList.className = 'tasks-list';
+    const tasksDom = document.createElement('ul');
+    tasksDom.className = 'tasks-list';
 
-    tasksSection.appendChild(tasksList);
+    tasksSection.appendChild(tasksDom);
 
 
     main.appendChild(form);
+    main.appendChild(sortButton);
     main.appendChild(tasksSection);
     document.body.appendChild(main);
 
-    state.tasksList = tasksList;
+    state.tasksDom = tasksDom;
     state.taskInput = input;
     state.dateInput = dateInput;
+    state.sortButton = sortButton;
 }
 
-function attachEventListeners() {
-    const form = document.querySelector('.todo-form');
-    form.addEventListener('submit', handleAddTask);
+function sortTasksByDate() {
+    state.tasks.sort((a, b) => {
+        if (!a.taskDate && !b.taskDate) return 0;
+        if (!a.taskDate) return 1;
+        if (!b.taskDate) return -1;
+
+        const dateA = new Date(a.taskDate);
+        const dateB = new Date(b.taskDate);
+        
+        return dateA - dateB;
+    });
+
+    saveTasks();
+
+    while (state.tasksDom.firstChild) {
+        state.tasksDom.removeChild(state.tasksDom.firstChild);
+    }
+
+    state.tasks.forEach(task => {
+        const taskElement = createTaskElement(task);
+        state.tasksDom.appendChild(taskElement);
+    });
 }
 
 function handleAddTask(event) {
@@ -109,7 +136,7 @@ function handleAddTask(event) {
         state.dateInput.valueAsDate = new Date();
         
         const taskElement = createTaskElement(task);
-        state.tasksList.appendChild(taskElement);
+        state.tasksDom.appendChild(taskElement);
     }
 }
 

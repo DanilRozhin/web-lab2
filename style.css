@@ -105,3 +105,17 @@
     align-self: center;
     cursor: pointer;
 }
+
+.sort-btn {
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: 0;
+}
