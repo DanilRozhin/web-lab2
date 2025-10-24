@@ -14,10 +14,7 @@ function loadTasks() {
     if (saved) {
         state.tasks = JSON.parse(saved);
 
-        state.tasks.forEach(task => {
-            const taskElement = createTaskElement(task);
-            state.tasksDom.appendChild(taskElement);
-        });
+        renderTasks();
     }
 }
 
@@ -71,6 +68,34 @@ function createAppStructure() {
     sortButton.addEventListener('click', sortTasksByDate);
 
 
+    const filterLabel = document.createElement('label');
+    filterLabel.textContent = 'Задачи: ';
+    filterLabel.className = 'filter-label';
+
+    const filterSelect = document.createElement('select');
+    filterSelect.className = 'filter-select';
+    filterSelect.addEventListener('change', handleFilterChange);
+
+    const optionAll = document.createElement('option');
+    optionAll.value = 'all';
+    optionAll.textContent = 'Все';
+
+    const optionActive = document.createElement('option');
+    optionActive.value = 'active';
+    optionActive.textContent = 'Невыполненные';
+    
+    const optionCompleted = document.createElement('option');
+    optionCompleted.value = 'completed';
+    optionCompleted.textContent = 'Выполненные';
+
+    filterSelect.appendChild(optionAll);
+    filterSelect.appendChild(optionActive);
+    filterSelect.appendChild(optionCompleted);
+
+    filterLabel.appendChild(filterSelect);
+    
+
+
     const tasksSection = document.createElement('section');
     tasksSection.className = 'tasks-section';
 
@@ -82,6 +107,7 @@ function createAppStructure() {
 
     main.appendChild(form);
     main.appendChild(sortButton);
+    main.appendChild(filterLabel);
     main.appendChild(tasksSection);
     document.body.appendChild(main);
 
@@ -89,6 +115,28 @@ function createAppStructure() {
     state.taskInput = input;
     state.dateInput = dateInput;
     state.sortButton = sortButton;
+}
+
+function renderTasks() {
+    while (state.tasksDom.firstChild) {
+        state.tasksDom.removeChild(state.tasksDom.firstChild);
+    }
+
+    const filteredTasks = state.tasks.filter(task => {
+        switch (state.currentFilter) {
+            case 'active':
+                return !task.completed;
+            case 'completed':
+                return task.completed;
+            default:
+                return true; // 'all'
+        }
+    });
+
+    filteredTasks.forEach(task => {
+        const taskElement = createTaskElement(task);
+        state.tasksDom.appendChild(taskElement);
+    });
 }
 
 function sortTasksByDate() {
@@ -109,10 +157,12 @@ function sortTasksByDate() {
         state.tasksDom.removeChild(state.tasksDom.firstChild);
     }
 
-    state.tasks.forEach(task => {
-        const taskElement = createTaskElement(task);
-        state.tasksDom.appendChild(taskElement);
-    });
+    renderTasks();
+}
+
+function handleFilterChange(event) {
+    state.currentFilter = event.target.value;
+    renderTasks();
 }
 
 function handleAddTask(event) {
@@ -135,8 +185,7 @@ function handleAddTask(event) {
         state.taskInput.value = '';
         state.dateInput.valueAsDate = new Date();
         
-        const taskElement = createTaskElement(task);
-        state.tasksDom.appendChild(taskElement);
+        renderTasks();
     }
 }
 
