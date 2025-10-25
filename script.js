@@ -1,6 +1,7 @@
 const state = {
     tasks: [],
     currentFilter: 'all',
+    searchText: ''
 }
 
 function init() {
@@ -93,8 +94,16 @@ function createAppStructure() {
     filterSelect.appendChild(optionCompleted);
 
     filterLabel.appendChild(filterSelect);
-    
 
+
+
+    const searchField = document.createElement('input');
+    searchField.type = 'search';
+    searchField.placeholder = 'Поиск задач';
+    searchField.className = 'search-field';
+    searchField.addEventListener('input', handleSearch);
+
+    
 
     const tasksSection = document.createElement('section');
     tasksSection.className = 'tasks-section';
@@ -108,6 +117,7 @@ function createAppStructure() {
     main.appendChild(form);
     main.appendChild(sortButton);
     main.appendChild(filterLabel);
+    main.appendChild(searchField);
     main.appendChild(tasksSection);
     document.body.appendChild(main);
 
@@ -115,28 +125,15 @@ function createAppStructure() {
     state.taskInput = input;
     state.dateInput = dateInput;
     state.sortButton = sortButton;
+    state.searchField = searchField;
 }
 
 function renderTasks() {
-    while (state.tasksDom.firstChild) {
-        state.tasksDom.removeChild(state.tasksDom.firstChild);
+    state.searchText = '';
+    if (state.searchField) {
+        state.searchField.value = '';
     }
-
-    const filteredTasks = state.tasks.filter(task => {
-        switch (state.currentFilter) {
-            case 'active':
-                return !task.completed;
-            case 'completed':
-                return task.completed;
-            default:
-                return true; // 'all'
-        }
-    });
-
-    filteredTasks.forEach(task => {
-        const taskElement = createTaskElement(task);
-        state.tasksDom.appendChild(taskElement);
-    });
+    updateDisplay();
 }
 
 function sortTasksByDate() {
@@ -152,17 +149,7 @@ function sortTasksByDate() {
     });
 
     saveTasks();
-
-    while (state.tasksDom.firstChild) {
-        state.tasksDom.removeChild(state.tasksDom.firstChild);
-    }
-
-    renderTasks();
-}
-
-function handleFilterChange(event) {
-    state.currentFilter = event.target.value;
-    renderTasks();
+    updateDisplay();
 }
 
 function handleAddTask(event) {
@@ -185,8 +172,50 @@ function handleAddTask(event) {
         state.taskInput.value = '';
         state.dateInput.valueAsDate = new Date();
         
-        renderTasks();
+        updateDisplay();
     }
+}
+
+function handleFilterChange(event) {
+    state.currentFilter = event.target.value;
+    updateDisplay();
+}
+
+function handleSearch(event) {
+    state.searchText = event.target.value.toLowerCase().trim();
+    updateDisplay();
+}
+
+function updateDisplay() {
+    while (state.tasksDom.firstChild) {
+        state.tasksDom.removeChild(state.tasksDom.firstChild);
+    }
+
+    const filteredTasks = state.tasks.filter(task => {
+        let statusMatch = true;
+        switch (state.currentFilter) {
+            case 'active':
+                statusMatch = !task.completed;
+                break;
+            case 'completed':
+                statusMatch = task.completed;
+                break;
+            default:
+                statusMatch = true;
+        }
+        
+        let searchMatch = true;
+        if (state.searchText) {
+            searchMatch = task.text.toLowerCase().includes(state.searchText);
+        }
+        
+        return statusMatch && searchMatch;
+    });
+
+    filteredTasks.forEach(task => {
+        const taskElement = createTaskElement(task);
+        state.tasksDom.appendChild(taskElement);
+    });
 }
 
 function createTaskElement(task) {
