@@ -225,7 +225,7 @@ function createTaskElement(task) {
 
     taskItem.draggable = true;
     taskItem.addEventListener('dragstart', handleDragStart); // Захватили
-    taskItem.addEventListener('dragover', handleDragStop); // Тащим
+    taskItem.addEventListener('dragover', handleDragOver); // Тащим
     taskItem.addEventListener('drop', handleDrop); // Бросили
 
     const checkbox = document.createElement('input');
@@ -273,7 +273,7 @@ function handleDragStart(event) {
     event.dataTransfer.setData('text/plain', this.dataset.id);
 }
 
-function handleDragStop(event) {
+function handleDragOver(event) {
     event.preventDefault();
 }
 
