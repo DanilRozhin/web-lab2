@@ -104,6 +104,12 @@ function createAppStructure() {
     searchField.addEventListener('input', handleSearch);
 
     
+    const mainContainer = document.createElement('div');
+    mainContainer.className = 'main-container';
+
+    mainContainer.appendChild(sortButton);
+    mainContainer.appendChild(filterLabel);
+    mainContainer.appendChild(searchField);
 
     const tasksSection = document.createElement('section');
     tasksSection.className = 'tasks-section';
@@ -115,9 +121,10 @@ function createAppStructure() {
 
 
     main.appendChild(form);
-    main.appendChild(sortButton);
-    main.appendChild(filterLabel);
-    main.appendChild(searchField);
+    // main.appendChild(sortButton);
+    // main.appendChild(filterLabel);
+    // main.appendChild(searchField);
+    main.appendChild(mainContainer);
     main.appendChild(tasksSection);
     document.body.appendChild(main);
 
@@ -301,14 +308,7 @@ function toggleTask(taskId) {
     if (task) {
         task.completed = !task.completed;
         saveTasks();
-    
-        const taskElement = document.querySelector(`[data-id="${taskId}"]`);
-        
-        if (taskElement) {
-            const taskText = taskElement.querySelector('.task-text');
-            taskText.style.textDecoration = task.completed ? 'line-through' : 'none';
-            taskText.style.color = task.completed ? '#888' : 'inherit';
-        }
+        updateDisplay();
     }
 }
 
@@ -332,26 +332,13 @@ function editTask(taskId) {
     }
     task.taskDate = newDate;
     saveTasks();
-    
-    const taskElement = document.querySelector(`[data-id="${taskId}"]`);
-    if (taskElement) {
-        const taskText = taskElement.querySelector('.task-text');
-        const taskDate = taskElement.querySelector('.task-date');
-        
-        taskText.textContent = task.text;
-        taskDate.textContent = task.taskDate || '';
-        taskDate.dateTime = task.taskDate;
-    }
+    updateDisplay();
 }
 
 function deleteTask(taskId) {
     state.tasks = state.tasks.filter(t => t.id !== taskId);
     saveTasks();
-
-    const taskElement = document.querySelector(`[data-id="${taskId}"]`);
-    if (taskElement) {
-        taskElement.remove();
-    }
+    updateDisplay();
 }
 
 document.addEventListener('DOMContentLoaded', init);
