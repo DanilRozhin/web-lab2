@@ -15,6 +15,7 @@
     border: 2px solid black;
     border-radius: 4px;
     font-size: 16px;
+    min-width: 0;
 }
 
 .add-btn {
@@ -46,12 +47,13 @@
     align-items: flex-start;
     padding: 15px;
     border: none;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     border-radius: 8px;
     background: white;
     transition: all 0.3s ease;
     gap: 15px;
     cursor: grab;
+    flex-wrap: wrap;
 }
 
 .task-item:hover {
@@ -111,16 +113,214 @@
     cursor: pointer;
 }
 
+.main-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
 .sort-btn {
-    padding: 10px 20px;
+    padding: 8px 16px;
     background: black;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    display: block;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: 0;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+.search-field {
+    padding: 8px 12px;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+@media (max-width: 640px) {
+    .todo-form {
+        flex-direction: column;
+    }
+    
+    .main-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-label {
+        justify-content: space-between;
+    }
+    
+    .search-field {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+    }
+    
+    .task-item {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .task-text {
+        margin: 0 10px;
+        font-size: 14px;
+    }
+    
+    .task-date {
+        font-size: 14px;
+    }
+    
+    .edit-btn, .delete-btn {
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 430px) {
+    .header {
+        padding: 15px 10px;
+    }
+    
+    .header h1 {
+        font-size: 22px;
+    }
+    
+    .todo-form {
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .task-input,
+    .date-input {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    .add-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .main-container {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .sort-btn,
+    .filter-select,
+    .search-field {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    
+    .task-item {
+        padding: 8px;
+        gap: 8px;
+    }
+    
+    .task-text {
+        margin: 0 8px;
+        font-size: 13px;
+    }
+    
+    .task-date {
+        font-size: 12px;
+    }
+    
+    .edit-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+    
+    .delete-btn {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header {
+        padding: 12px 8px;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .todo-form {
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+    
+    .task-input,
+    .date-input {
+        padding: 6px;
+        font-size: 13px;
+    }
+    
+    .add-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .main-container {
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .sort-btn,
+    .filter-select,
+    .search-field {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+    
+    .task-item {
+        padding: 6px;
+        gap: 4px;
+    }
+    
+    .task-text {
+        margin: 0 3px;
+        font-size: 12px;
+    }
+    
+    .task-date {
+        font-size: 11px;
+    }
+    
+    .edit-btn {
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+    
+    .delete-btn {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+    }
 }
