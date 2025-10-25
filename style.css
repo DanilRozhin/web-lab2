@@ -51,10 +51,15 @@
     background: white;
     transition: all 0.3s ease;
     gap: 15px;
+    cursor: grab;
 }
 
 .task-item:hover {
     box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+}
+
+.task-item:active {
+    cursor: grabbing;
 }
 
 .task-text {

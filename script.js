@@ -223,6 +223,11 @@ function createTaskElement(task) {
     taskItem.className = 'task-item';
     taskItem.dataset.id = task.id;
 
+    taskItem.draggable = true;
+    taskItem.addEventListener('dragstart', handleDragStart); // Захватили
+    taskItem.addEventListener('dragover', handleDragStop); // Тащим
+    taskItem.addEventListener('drop', handleDrop); // Бросили
+
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = task.completed;
@@ -262,6 +267,32 @@ function createTaskElement(task) {
     taskItem.appendChild(deleteBtn);
 
     return taskItem;
+}
+
+function handleDragStart(event) {
+    event.dataTransfer.setData('text/plain', this.dataset.id);
+}
+
+function handleDragStop(event) {
+    event.preventDefault();
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    
+    const draggedId = parseInt(event.dataTransfer.getData('text/plain'));
+    const targetId = parseInt(this.dataset.id);
+    
+    const draggedIndex = state.tasks.findIndex(task => task.id === draggedId);
+    const targetIndex = state.tasks.findIndex(task => task.id === targetId);
+    
+    if (draggedIndex !== -1 && targetIndex !== -1) {
+        const [movedTask] = state.tasks.splice(draggedIndex, 1);
+        state.tasks.splice(targetIndex, 0, movedTask);
+        
+        saveTasks();
+        updateDisplay();
+    }
 }
 
 function toggleTask(taskId) {
